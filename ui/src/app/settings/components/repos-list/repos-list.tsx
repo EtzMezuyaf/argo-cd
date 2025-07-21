@@ -83,6 +83,7 @@ interface NewGoogleCloudSourceRepoParams {
 interface NewSSHRepoCredsParams {
     url: string;
     sshPrivateKey: string;
+    project?: string
     // write should be true if saving as a write credential.
     write: boolean;
 }
@@ -96,6 +97,7 @@ interface NewHTTPSRepoCredsParams {
     tlsClientCertData: string;
     tlsClientCertKey: string;
     proxy: string;
+    project?: string
     noProxy: string;
     forceHttpBasicAuth: boolean;
     enableOCI: boolean;
@@ -114,6 +116,7 @@ interface NewGitHubAppRepoCredsParams {
     tlsClientCertData: string;
     tlsClientCertKey: string;
     proxy: string;
+    project?: string
     noProxy: string;
     // write should be true if saving as a write credential.
     write: boolean;
@@ -122,6 +125,7 @@ interface NewGitHubAppRepoCredsParams {
 interface NewGoogleCloudSourceRepoCredsParams {
     url: string;
     gcpServiceAccountKey: string;
+    project?: string
     // write should be true if saving as a write credential.
     write: boolean;
 }
@@ -514,15 +518,24 @@ export class ReposList extends React.Component<
                                     <div className='argo-table-list'>
                                         <div className='argo-table-list__head'>
                                             <div className='row'>
-                                                <div className='columns small-9'>CREDENTIALS TEMPLATE URL</div>
+                                                <div className='columns small-4'>CREDENTIALS TEMPLATE URL</div>
+                                                <div className='columns small-5'>PROJECT</div>
                                                 <div className='columns small-3'>CREDS</div>
                                             </div>
                                         </div>
                                         {creds.map(repo => (
                                             <div className='argo-table-list__row' key={repo.url}>
                                                 <div className='row'>
-                                                    <div className='columns small-9'>
-                                                        <i className='icon argo-icon-git' /> <Repo url={repo.url} />
+                                                    <div className='columns small-4'>
+                                                        <i className='icon argo-icon-template' />
+                                                        <Tooltip content={repo.url}>
+                                                            <span>{repo.url}</span>
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className='columns small-5'>
+                                                        <Tooltip content={repo.project}>
+                                                            <span>{repo.project}</span>
+                                                        </Tooltip>
                                                     </div>
                                                     <div className='columns small-3'>
                                                         -
@@ -535,7 +548,7 @@ export class ReposList extends React.Component<
                                                             items={[
                                                                 {
                                                                     title: 'Remove',
-                                                                    action: () => this.removeRepoCreds(repo.url, false)
+                                                                    action: () => this.removeRepoCreds(repo.url, false) //#TODO add project for removing cred template
                                                                 }
                                                             ]}
                                                         />
@@ -636,15 +649,24 @@ export class ReposList extends React.Component<
                                         <div className='argo-table-list'>
                                             <div className='argo-table-list__head'>
                                                 <div className='row'>
-                                                    <div className='columns small-9'>CREDENTIALS TEMPLATE URL</div>
+                                                    <div className='columns small-4'>CREDENTIALS TEMPLATE URL</div>
+                                                    <div className='columns small-5'>PROJECT</div>
                                                     <div className='columns small-3'>CREDS</div>
                                                 </div>
                                             </div>
                                             {creds.map(repo => (
                                                 <div className='argo-table-list__row' key={repo.url}>
                                                     <div className='row'>
-                                                        <div className='columns small-9'>
-                                                            <i className='icon argo-icon-git' /> <Repo url={repo.url} />
+                                                        <div className='columns small-4'>
+                                                            <i className='icon argo-icon-template' />
+                                                            <Tooltip content={repo.url}>
+                                                                <span>{repo.url}</span>
+                                                            </Tooltip>
+                                                        </div>
+                                                        <div className='columns small-5'>
+                                                            <Tooltip content={repo.project}>
+                                                                <span>{repo.project}</span>
+                                                            </Tooltip>
                                                         </div>
                                                         <div className='columns small-3'>
                                                             -
@@ -657,7 +679,7 @@ export class ReposList extends React.Component<
                                                                 items={[
                                                                     {
                                                                         title: 'Remove',
-                                                                        action: () => this.removeRepoCreds(repo.url, true)
+                                                                        action: () => this.removeRepoCreds(repo.url, true) //#TODO add project for removing cred template
                                                                     }
                                                                 ]}
                                                             />
@@ -1038,7 +1060,7 @@ export class ReposList extends React.Component<
     // Connect a new repository or create a repository credentials for SSH repositories
     private async connectSSHRepo(params: NewSSHRepoParams) {
         if (this.credsTemplate) {
-            this.createSSHCreds({url: params.url, sshPrivateKey: params.sshPrivateKey, write: params.write});
+            this.createSSHCreds({url: params.url, sshPrivateKey: params.sshPrivateKey, project: params.project, write: params.write});
         } else {
             this.setState({connecting: true});
             try {
@@ -1072,6 +1094,7 @@ export class ReposList extends React.Component<
                 tlsClientCertData: params.tlsClientCertData,
                 tlsClientCertKey: params.tlsClientCertKey,
                 proxy: params.proxy,
+                project: params.project,
                 noProxy: params.noProxy,
                 forceHttpBasicAuth: params.forceHttpBasicAuth,
                 enableOCI: params.enableOCI,
@@ -1133,6 +1156,7 @@ export class ReposList extends React.Component<
                 tlsClientCertData: params.tlsClientCertData,
                 tlsClientCertKey: params.tlsClientCertKey,
                 proxy: params.proxy,
+                project: params.project,
                 noProxy: params.noProxy,
                 write: params.write
             });
@@ -1163,6 +1187,7 @@ export class ReposList extends React.Component<
             this.createGoogleCloudSourceCreds({
                 url: params.url,
                 gcpServiceAccountKey: params.gcpServiceAccountKey,
+                project: params.project,
                 write: params.write
             });
         } else {

@@ -10,6 +10,7 @@ export interface HTTPSCreds {
     tlsClientCertKey: string;
     type: string;
     proxy: string;
+    project?: string;
     noProxy: string;
     enableOCI: boolean;
     insecureOCIForceHttp: boolean;
@@ -18,6 +19,7 @@ export interface HTTPSCreds {
 export interface SSHCreds {
     url: string;
     sshPrivateKey: string;
+    project?: string;
 }
 
 export interface GitHubAppCreds {
@@ -29,12 +31,14 @@ export interface GitHubAppCreds {
     tlsClientCertData: string;
     tlsClientCertKey: string;
     proxy: string;
+    project?: string;
     noProxy: string;
 }
 
 export interface GoogleCloudSourceCreds {
     url: string;
     gcpServiceAccountKey: string;
+    project?: string;
 }
 
 export class RepoCredsService {

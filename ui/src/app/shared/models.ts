@@ -630,6 +630,7 @@ export interface RepositoryList extends ItemsList<Repository> {}
 
 export interface RepoCreds {
     url: string;
+    project?: string;
     username?: string;
     bearerToken?: string;
 }
